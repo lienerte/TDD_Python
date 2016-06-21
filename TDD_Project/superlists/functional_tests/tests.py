@@ -46,6 +46,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputBox.send_keys("Milk and cheese")
         #time.sleep(10)
         inputBox.send_keys(Keys.ENTER)
+        first_list_url = self.browser.current_url
+        self.assertRegexpMatches(first_list_url, '/lists/.+')
         self.check_for_row_in_list_table("1: Milk and cheese")
         inputBox = self.browser.find_element_by_id('id_new_item')
         inputBox.send_keys("Vegetables")
@@ -57,6 +59,27 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('2: Vegetables', [row.text for row in rows])
             #Option to add to another text box
             #Page updates and shows both on list
+
+        #new user comes
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('1: Milk and cheese')
+        self.assertNotIn('2: Vegetables')
+
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        inputBox.send_keys("Lawn Mower")
+        inputBox.send_keys(Keys.ENTER)
+
+        second_list_url = self.browser.current_url
+        self.assertRegexpMatches(second_list_url, '/lists/.+')
+        self.assertNotEqual(second_list_url, first_list_url)
+
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn("Vegetables", page_text)
+        self.assertIn("Lawn Mower", page_text)
         self.fail('Finish the test')
 
 if __name__ == '__main__':
