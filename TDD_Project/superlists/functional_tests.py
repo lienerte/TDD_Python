@@ -22,6 +22,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     #Asked to enter a To-Do list; enter various items and save them
     def test_start_list_and_retrieve(self):
         self.browser.get('http://localhost:8000')
@@ -40,6 +45,11 @@ class NewVisitorTest(unittest.TestCase):
         inputBox.send_keys("Milk and cheese")
         #time.sleep(10)
         inputBox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table("1: Milk and cheese")
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        inputBox.send_keys("2: Vegetables")
+        inputBox.send_keys(Keys.ENTER)
+
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn('1: Milk and cheese', [row.text for row in rows])
