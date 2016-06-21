@@ -35,6 +35,7 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
             any(row.text == '1: Milk and cheese' for row in rows),
+            "The next item did not appear in the table"
         )
             #Option to add to another text box
             #Page updates and shows both on list
