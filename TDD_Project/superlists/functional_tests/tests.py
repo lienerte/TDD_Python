@@ -6,13 +6,14 @@ https://sites.google.com/a/chromium.org/chromedriver/getting-started
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.http import HttpRequest
+from django.test import LiveServerTestCase
 
 import time
 import unittest
 
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     #User enters the main site
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -29,7 +30,7 @@ class NewVisitorTest(unittest.TestCase):
 
     #Asked to enter a To-Do list; enter various items and save them
     def test_start_list_and_retrieve(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
             #Header says To-Do
         self.assertIn('To-Do', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -47,7 +48,7 @@ class NewVisitorTest(unittest.TestCase):
         inputBox.send_keys(Keys.ENTER)
         self.check_for_row_in_list_table("1: Milk and cheese")
         inputBox = self.browser.find_element_by_id('id_new_item')
-        inputBox.send_keys("2: Vegetables")
+        inputBox.send_keys("Vegetables")
         inputBox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_list_table')
