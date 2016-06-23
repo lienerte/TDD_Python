@@ -91,3 +91,22 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Satisfied, they both go back to sleep
 
+    def test_layout_and_styling(self):
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputBox.location['x'] + inputBox.size['width'] / 2,
+            500,
+            delta = 5
+        )
+
+        inputBox.send_keys('testing\n')
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputBox.location['x'] + inputBox.size['width'] / 2,
+            500,
+            delta = 5
+        )
+
